@@ -11,10 +11,9 @@ import {
   REMOVE_POST_REQUEST,
   REMOVE_POST_SUCCESS,
   REMOVE_POST_FAILURE,
-  REMOVE_POST_OF_ME,
 } from '../reducers/post';
 import shortid from 'shortid';
-import { ADD_POST_TO_ME } from '../reducers/user';
+import { ADD_POST_TO_ME, REMOVE_POST_OF_ME } from '../reducers/user';
 
 function addPostAPI(data) {
   return axios.post('/api/post', data);
