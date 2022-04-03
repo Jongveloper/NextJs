@@ -8,7 +8,7 @@ const FollowButton = ({ post }) => {
   const dispatch = useDispatch();
   const { me, followLoading, unFollowLoading } = useSelector((state) => state.user);
 
-  const isFollowing = me && me.Following.find((v) => v.id === post.User.id);
+  const isFollowing = me && me.Followings.find((v) => v.id === post.User.id);
   const onClickButton = useCallback(() => {
     if (isFollowing) {
       dispatch({
