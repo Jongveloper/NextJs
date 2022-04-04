@@ -21,8 +21,8 @@ passportConfig();
 
 app.use(
   cors({
-    origin: '*',
-    credentials: false,
+    origin: 'http://localhost:3060',
+    credentials: true,
   })
 );
 // 프론트에서 보낸 데이터를 req.body에 넣어주는 역할
