@@ -1,6 +1,6 @@
-import shortId from 'shortid';
+// import shortId from 'shortid';
 import produce from 'immer';
-import faker from 'faker';
+// import faker from 'faker';
 
 export const initialState = {
   mainPosts: [],
@@ -20,27 +20,27 @@ export const initialState = {
   addCommentError: null,
 };
 
-export const generateDummyPost = (number) =>
-  Array(20)
-    .fill()
-    .map(() => ({
-      id: shortId.generate(),
-      User: {
-        id: shortId.generate(),
-        nickname: faker.name.findName(),
-      },
-      content: faker.lorem.paragraph(),
-      Images: [],
-      Comments: [
-        {
-          User: {
-            id: shortId.generate(),
-            nickname: faker.name.findName(),
-          },
-          content: faker.lorem.sentence(),
-        },
-      ],
-    }));
+// export const generateDummyPost = (number) =>
+//   Array(20)
+//     .fill()
+//     .map(() => ({
+//       id: shortId.generate(),
+//       User: {
+//         id: shortId.generate(),
+//         nickname: faker.name.findName(),
+//       },
+//       content: faker.lorem.paragraph(),
+//       Images: [],
+//       Comments: [
+//         {
+//           User: {
+//             id: shortId.generate(),
+//             nickname: faker.name.findName(),
+//           },
+//           content: faker.lorem.sentence(),
+//         },
+//       ],
+//     }));
 
 export const LOAD_POSTS_REQUEST = 'LOAD_POSTS_REQUEST';
 export const LOAD_POSTS_SUCCESS = 'LOAD_POSTS_SUCCESS';
@@ -79,14 +79,14 @@ export const addComment = (data) => ({
 //   Comments: [],
 // });
 
-const dummyComment = (data) => ({
-  id: shortId.generate(),
-  content: data,
-  User: {
-    id: 1,
-    nickname: 'jong',
-  },
-});
+// const dummyComment = (data) => ({
+//   id: shortId.generate(),
+//   content: data,
+//   User: {
+//     id: 1,
+//     nickname: 'jong',
+//   },
+// });
 
 const reducer = (state = initialState, action) => {
   return produce(state, (draft) => {
