@@ -57,6 +57,7 @@ function* unLikePost(action) {
       data: result.data,
     });
   } catch (err) {
+    console.error(err);
     yield put({
       type: UN_LIKE_POST_FAILURE,
       data: err.response.data,
