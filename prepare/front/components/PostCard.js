@@ -14,6 +14,7 @@ import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UN_LIKE_POST_REQUEST } from '..
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
   const { removePostLoading } = useSelector((state) => state.post);
+
   const [commentFormOpened, setCommentFormOpened] = useState(false);
   const id = useSelector((state) => state.user.me?.id);
   // const id = me?.id; //me && me.id
