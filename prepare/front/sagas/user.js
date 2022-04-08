@@ -128,9 +128,9 @@ function changeNicknameAPI(data) {
   return axios.patch('/user/nickname', { nickname: data });
 }
 
-function* changeNickname() {
+function* changeNickname(action) {
   try {
-    const result = yield call(changeNicknameAPI);
+    const result = yield call(changeNicknameAPI, action.data);
     // yield delay(1000);
     yield put({
       type: CHANGE_NICKNAME_SUCCESS,
