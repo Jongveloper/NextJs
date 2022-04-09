@@ -104,9 +104,10 @@ router.post('/', isNotLoggedIn, async (req, res, next) => {
 });
 
 router.post('/logout', isLoggedIn, (req, res) => {
+  console.log(req);
   req.logout();
   req.session.destroy();
-  req.send('ok');
+  res.send('ok');
 });
 
 router.patch('/nickname', isLoggedIn, async (req, res, next) => {
