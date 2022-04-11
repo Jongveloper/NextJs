@@ -9,6 +9,7 @@ const db = require('./models');
 const passportConfig = require('./passport');
 const passport = require('passport');
 const dotenv = require('dotenv');
+const path = require('path');
 const morgan = require('morgan');
 
 dotenv.config();
@@ -21,6 +22,7 @@ db.sequelize
   .catch(console.error);
 passportConfig();
 
+app.use('/', express.static(path.join(__dirname, 'uploads')));
 app.use(morgan('dev'));
 app.use(
   cors({
