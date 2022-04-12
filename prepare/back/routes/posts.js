@@ -1,7 +1,7 @@
 const express = require('express');
 
 const { Post, User, Image, Comment } = require('../models');
-
+const { Op } = require('sequelize');
 const router = express.Router();
 
 // limit과 offset을 잘 안쓰는 이유 :
@@ -10,7 +10,13 @@ const router = express.Router();
 router.get('/', async (req, res, next) => {
   // GET /posts
   try {
+    const where = {};
+    if (parseInt(req.query.lastId, 10)) {
+      //초기 로딩이 아닐 때
+      where.id = { [Op.lt]: parseInt(req.query.lastId, 10) };
+    }
     const posts = await Post.findAll({
+      where,
       limit: 10,
       // offset: 0, // 1번 게시물부터 ~~
       order: [
