@@ -14,6 +14,13 @@ const Home = () => {
   const mainPosts = useSelector((state) => state.post.mainPosts);
   const hasMorePosts = useSelector((state) => state.post.hasMorePosts);
   const loadPostsLoading = useSelector((state) => state.post.loadPostsLoading);
+  const retweetFailure = useSelector((state) => state.post.retweetError);
+
+  useEffect(() => {
+    if (retweetFailure) {
+      alert(retweetFailure);
+    }
+  }, [retweetFailure]);
 
   useEffect(() => {
     dispatch({
