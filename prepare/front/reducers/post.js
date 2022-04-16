@@ -6,7 +6,7 @@ export const initialState = {
   mainPosts: [],
   singlePost: null,
   imagePaths: [],
-  hasMorePosts: false,
+  hasMorePosts: true,
   likePostLoading: false,
   likePostDone: false,
   likePostError: null,
