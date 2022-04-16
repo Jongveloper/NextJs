@@ -9,7 +9,7 @@ import axios from 'axios';
 import Router from 'next/router';
 import { SIGN_UP_REQUEST, LOAD_MY_INFO_REQUEST } from '../reducers/user';
 import { END } from 'redux-saga';
-
+import wrapper from '../store/configureStore';
 const ErrorMessage = styled.div`
   color: red;
 `;

@@ -6,8 +6,9 @@ import FollowList from '../components/FollowList';
 import NicknameEditForm from '../components/NicknameEditForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { LOAD_FOLLOWERS_REQUEST, LOAD_FOLLOWINGS_REQUEST, LOAD_MY_INFO_REQUEST } from '../reducers/user';
-import { getServerSideProps } from './index';
 import axios from 'axios';
+import wrapper from '../store/configureStore';
+import { END } from 'redux-saga';
 
 const Profile = () => {
   const dispatch = useDispatch();
