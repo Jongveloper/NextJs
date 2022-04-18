@@ -42,50 +42,42 @@ router.get('/', async (req, res, next) => {
     next(error);
   }
 });
-router.get('/:userId', async (req, res, next) => {
-  // GET /user/1
+
+router.get('/followers', isLoggedIn, async (req, res, next) => {
+  //GET /user/followers
   try {
-    if (req.user) {
-      const fullUserWithoutPassword = await User.findOne({
-        where: { id: req.params.userId },
-        attributes: {
-          exclude: ['password'],
-        },
-        include: [
-          {
-            model: Post,
-            attributes: ['id'], // 다 불러오면 용량이 크기 때문에 데이터효율을 위해 id만 가져온다
-          },
-          {
-            model: User,
-            as: 'Followings',
-            attributes: ['id'],
-          },
-          {
-            model: User,
-            as: 'Followers',
-            attributes: ['id'],
-          },
-        ],
-      });
-      if (fullUserWithoutPassword) {
-        //개인정보 침해 예방
-        const data = fullUserWithoutPassword.toJSON();
-        data.Posts = data.Posts.length;
-        data.Followers = data.Followers.length;
-        data.Followings = data.Followings.length;
-        res.status(200).json(data);
-      } else {
-        res.status(404).json('존재하지 않는 사용자입니다.');
-      }
-    } else {
-      res.status(200).json(null);
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) {
+      res.status(403).send('회원정보가 없습니다!');
     }
+    const followers = await user.getFollowers({
+      limit: 3,
+    });
+    res.status(200).json(followers);
   } catch (error) {
     console.error(error);
     next(error);
   }
 });
+
+router.get('/followings', isLoggedIn, async (req, res, next) => {
+  //GET /user/followings
+  try {
+    const user = await User.findOne({ where: { id: req.user.id } });
+    if (!user) {
+      res.status(403).send('회원정보가 없습니다!');
+    }
+    const followings = await user.getFollowings({
+      limit: 3,
+    });
+    res.status(200).json(followings);
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+
 
 router.get('/:userId/posts', async (req, res, next) => {
   // GET /user/1/posts
@@ -279,30 +271,46 @@ router.delete('/follower/:userId', isLoggedIn, async (req, res, next) => {
   }
 });
 
-router.get('/followers', isLoggedIn, async (req, res, next) => {
-  //GET /user/followers
-  try {
-    const user = await User.findOne({ where: { id: req.user.id } });
-    if (!user) {
-      res.status(403).send('회원정보가 없습니다!');
-    }
-    const followers = await user.getFollowers();
-    res.status(200).json(followers);
-  } catch (error) {
-    console.error(error);
-    next(error);
-  }
-});
 
-router.get('/followings', isLoggedIn, async (req, res, next) => {
-  //GET /user/followings
+router.get('/:userId', async (req, res, next) => {
+  // GET /user/1
   try {
-    const user = await User.findOne({ where: { id: req.user.id } });
-    if (!user) {
-      res.status(403).send('회원정보가 없습니다!');
+    if (req.user) {
+      const fullUserWithoutPassword = await User.findOne({
+        where: { id: req.params.userId },
+        attributes: {
+          exclude: ['password'],
+        },
+        include: [
+          {
+            model: Post,
+            attributes: ['id'], // 다 불러오면 용량이 크기 때문에 데이터효율을 위해 id만 가져온다
+          },
+          {
+            model: User,
+            as: 'Followings',
+            attributes: ['id'],
+          },
+          {
+            model: User,
+            as: 'Followers',
+            attributes: ['id'],
+          },
+        ],
+      });
+      if (fullUserWithoutPassword) {
+        //개인정보 침해 예방
+        const data = fullUserWithoutPassword.toJSON();
+        data.Posts = data.Posts.length;
+        data.Followers = data.Followers.length;
+        data.Followings = data.Followings.length;
+        res.status(200).json(data);
+      } else {
+        res.status(404).json('존재하지 않는 사용자입니다.');
+      }
+    } else {
+      res.status(200).json(null);
     }
-    const followings = await user.getFollowings();
-    res.status(200).json(followings);
   } catch (error) {
     console.error(error);
     next(error);
