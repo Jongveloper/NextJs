@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import AppLayout from '../components/AppLayout';
 import Head from 'next/head';
 import Router from 'next/router';
@@ -15,9 +15,11 @@ const fetcher = (url) => axios.get(url, { withCredentials: true }).then((result)
 
 const Profile = () => {
   const me = useSelector((state) => state.user.me);
+  const [followersLimit, setFollowersLimit] = useState(3);
+  const [followingsLimit, setFollowingsLimit] = useState(3);
 
-  const { data: followersData, error: followerError } = useSWR(`http://localhost:3065/user/followers`, fetcher);
-  const { data: followingsData, error: followingError } = useSWR(`http://localhost:3065/user/followings`, fetcher);
+  const { data: followersData, error: followerError } = useSWR(`http://localhost:3065/user/followers?limit=${followersLimit}`, fetcher);
+  const { data: followingsData, error: followingError } = useSWR(`http://localhost:3065/user/followings?limit=${followingsLimit}`, fetcher);
 
   useEffect(() => {
     if (!(me && me.id)) {
@@ -28,6 +30,13 @@ const Profile = () => {
   if (!me) {
     return null;
   }
+
+  const loadMoreFollowings = useCallback(() => {
+    setFollowingsLimit((prev) => prev + 3);
+  }, []);
+  const loadMoreFollowers = useCallback(() => {
+    setFollowersLimit((prev) => prev + 3);
+  }, []);
 
   if (followerError || followingError) {
     console.error(followerError || followingError);
@@ -41,8 +50,8 @@ const Profile = () => {
       </Head>
       <AppLayout>
         <NicknameEditForm />
-        <FollowList header="팔로잉" data={followingsData} />
-        <FollowList header="팔로워" data={followersData} />
+        <FollowList header="팔로잉" data={followingsData} onClickMore={loadMoreFollowings} loading={!followersData && !followerError} />
+        <FollowList header="팔로워" data={followersData} onClickMore={loadMoreFollowers} loading={!followingsData && !followingError} />
       </AppLayout>
     </>
   );
