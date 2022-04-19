@@ -10,6 +10,7 @@ import PostCardContent from './PostCardContent';
 import FollowButton from './FollowButton';
 
 import { REMOVE_POST_REQUEST, LIKE_POST_REQUEST, UN_LIKE_POST_REQUEST, RETWEET_REQUEST } from '../reducers/post';
+import Link from 'next/link';
 
 const PostCard = ({ post }) => {
   const dispatch = useDispatch();
@@ -72,18 +73,20 @@ const PostCard = ({ post }) => {
           <MessageOutlined key="comment" onClick={onToggleComment} />,
           <Popover
             key="more"
-            content={(
+            content={
               <Button.Group>
-                {id && post.User.id === id
-                  ? (
-                    <>
-                      <Button>수정</Button>
-                      <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>삭제</Button>
-                    </>
-                  )
-                  : <Button>신고</Button>}
+                {id && post.User.id === id ? (
+                  <>
+                    <Button>수정</Button>
+                    <Button type="danger" loading={removePostLoading} onClick={onRemovePost}>
+                      삭제
+                    </Button>
+                  </>
+                ) : (
+                  <Button>신고</Button>
+                )}
               </Button.Group>
-            )}
+            }
           >
             <EllipsisOutlined />
           </Popover>,
@@ -94,13 +97,29 @@ const PostCard = ({ post }) => {
         {post.RetweetId && post.Retweet ? (
           <Card cover={post.Images[0] && <PostImages images={post.Images} />}>
             <Card.Meta
-              avatar={<Avatar>{post.Retweet.User.nickname[0]}</Avatar>}
+              avatar={
+                <Link href={`/user/${post.Retweet.User.id}`}>
+                  <a>
+                    <Avatar>{post.Retweet.User.nickname[0]}</Avatar>
+                  </a>
+                </Link>
+              }
               title={post.Retweet.User.nickname}
               description={<PostCardContent postData={post.Retweet.content} />}
             />
           </Card>
         ) : (
-          <Card.Meta avatar={<Avatar>{post.User.nickname[0]}</Avatar>} title={post.User.nickname} description={<PostCardContent postData={post.content} />} />
+          <Card.Meta
+            avatar={
+              <Link href={`/user/${post.User.id}`}>
+                <a>
+                  <Avatar>{post.User.nickname[0]}</Avatar>
+                </a>
+              </Link>
+            }
+            title={post.User.nickname}
+            description={<PostCardContent postData={post.content} />}
+          />
         )}
       </Card>
       {commentFormOpened && (
@@ -112,7 +131,18 @@ const PostCard = ({ post }) => {
             dataSource={post.Comments}
             renderItem={(item) => (
               <li>
-                <Comment author={item.User.nickname} avatar={<Avatar>{item.User.nickname}</Avatar>} content={item.content} />
+                <Comment
+                  author={item.User.nickname}
+                  avatar={
+                    <Link href={item.User.id}>
+                      <a>
+                        {' '}
+                        <Avatar>{item.User.nickname}</Avatar>
+                      </a>
+                    </Link>
+                  }
+                  content={item.content}
+                />
               </li>
             )}
           />

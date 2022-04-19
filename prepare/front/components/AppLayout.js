@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import Link from 'next/link';
 import styled, { createGlobalStyle } from 'styled-components';
@@ -7,6 +7,8 @@ import { Input, Menu, Row, Col } from 'antd';
 
 import UserProfile from '../components/UserProfile';
 import LoginForm from '../components/LoginForm';
+import useInput from '../hooks/useInput';
+import Router from 'next/router';
 
 const SearchInput = styled(Input.Search)`
   vertical-align: middle;
@@ -28,9 +30,15 @@ const Global = createGlobalStyle`
 
 `;
 const AppLayout = ({ children }) => {
+  const [searchInput, onChangeSearchInput] = useInput('');
+
   // const { me } = useSelector((state) => state.user);
   const me = useSelector((state) => state.user.me);
   // const {isLoggedIn} = useSelector((state) => state.user);
+
+  const onSearch = useCallback(() => {
+    Router.push(`/hashtag/${searchInput}`);
+  }, [searchInput]);
 
   return (
     <div>
@@ -47,7 +55,7 @@ const AppLayout = ({ children }) => {
           </Link>
         </Menu.Item>
         <Menu.Item key="button">
-          <SearchInput enterButton />
+          <SearchInput enterButton value={searchInput} onChange={onChangeSearchInput} onSearch={onSearch} />
         </Menu.Item>
         <Menu.Item key="signup">
           <Link href="/signup">
